@@ -4,6 +4,9 @@ const validateUser = require('./authenticate-middleware')
 
 const bcrypt = require('bcryptjs')
 
+const generateToken = require('./token')
+
+
 router.post('/register', (req, res) => {
 
   req.body.password = bcrypt.hashSync(req.body.password, 4)
@@ -21,8 +24,10 @@ router.post('/login', (req, res) => {
   findUser(req.body.username)
     .then(user => {
       if (user && bcrypt.compareSync(req.body.password, user.password)) {
-        req.session.username = user.username
-        res.status(201).json({ message: 'You are now logged in' })
+
+        const token = generateToken(user)
+
+        res.status(201).json({ message: 'You are now logged in', token })
       } else {
         res.status(404).json({ message: 'invalid credentials' })
       }
