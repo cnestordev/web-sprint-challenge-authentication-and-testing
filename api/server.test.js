@@ -54,3 +54,5 @@ describe('manage resources from the USERS table', () => {
         })
     })
 })
+
+"hello"
